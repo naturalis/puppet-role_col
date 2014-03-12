@@ -2,7 +2,7 @@
 #
 #
 
-class role_solr::websites(
+class role_col::websites(
   $services			= ['mysqld','httpd']
 )
 {

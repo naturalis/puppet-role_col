@@ -2,7 +2,7 @@
 #
 #
 
-class role_solr::annualchecklist(
+class role_col::annualchecklist(
   $services			= ['mysqld','httpd']
 )
 {

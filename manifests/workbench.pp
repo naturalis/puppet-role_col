@@ -2,7 +2,7 @@
 #
 #
 
-class role_solr::workbench(
+class role_col::workbench(
   $services			= ['mysqld','httpd','webmin']
 )
 {
