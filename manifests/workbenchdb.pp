@@ -102,13 +102,4 @@ class role_col::workbenchdb(
   class { 'mysql::server':
     root_password       => $role_col::workbench::mysqlRootPassword,
   }
- 
-#  mysql::db { $databases:
-#    user            => $role_col::workbench::mysqlUser,
-#    password        => $role_col::workbench::mysqlPassword,
-#    host            => 'localhost',
-#    grant           => ['ALL'],
-#  }
-
-
 }

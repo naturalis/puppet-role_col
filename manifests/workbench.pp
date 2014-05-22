@@ -4,20 +4,51 @@
 
 class role_col::workbench(
   $extra_users_hash     = undef,
-  $packages             = ['subversion','perl','libnet-ssleay-perl','openssl','libauthen-pam-perl','libpam-runtime','libio-pty-perl','mdbtools','zip','smarty'],
-  $webdirs              = ['/var/www/piping','/var/www/piping/webservice','/var/www/piping/php'],
-  $rwwebdirs            = ['/var/www/piping/log'],
+  $workbench_users_hash = {'Master' => {
+                              'comment'         =>  'Example user 1',
+                              'password'        =>  'masterpwd',
+                              },
+                          },
+  $workbench_db_setperm = false,
+  $workbench_db_perm    = {'phpharvester' => {
+                              'user'            =>  'harvester',
+                              'password'        =>  'harvesterpwd',
+                              'privileges'      =>  ['SELECT','UPDATE'],
+                              },
+                          },
+  $packages             = ['subversion','perl','libnet-ssleay-perl','openssl','libauthen-pam-perl','libpam-runtime','libio-pty-perl','mdbtools','zip','smarty3'],
+  $webdirs              = ['/var/www/piping',
+                           '/var/www/piping/webservice',
+                           '/var/www/piping/php',
+                           '/var/www/piping_new',
+                           '/var/www/piping_new/webservice',
+                           '/var/www/piping_new/php',
+                           '/var/www/piping_devel',
+                           '/var/www/piping_devel/webservice',
+                           '/var/www/piping_devel/php',
+                           '/var/www/testcol',
+                           '/var/www/testcol/application'],
+  $rwwebdirs            = ['/var/www/piping/php/debug',
+                           '/var/www/piping/php/log',
+                           '/var/www/piping/php/templates_c',
+                           '/var/www/piping_new/php/debug',
+                           '/var/www/piping_new/php/log',
+                           '/var/www/piping_new/php/templates_c',
+                           '/var/www/piping_devel/php/debug',
+                           '/var/www/piping_devel/php/log',
+                           '/var/www/piping_devel/php/templates_c',
+                           '/var/www/testcol/application/log',],
   $instances            = {'www.catalogueoflife.com' => {
                                    'serveraliases'   => 'www.catalogueoflife.org',
                                    'aliases'         => [{ 'alias' => '/piping/webservice', 'path' => '/var/www/piping/webservice' },
                                                          { 'alias' => '/piping_devel/webservice', 'path' => '/var/www/piping_devel/webservice' },
                                                          { 'alias' => '/piping_devel', 'path' => '/var/www/piping_devel/php' },
                                                          { 'alias' => '/piping_new/webservice', 'path' => '/var/www/piping_new/webservice' },
-                                                         { 'alias' => '/piping_new', 'path' => '/var/www/piping_devel/php' },
+                                                         { 'alias' => '/piping_new', 'path' => '/var/www/piping_new/php' },
                                                          { 'alias' => '/testcol', 'path' => '/var/www/testcol/public' },
                                                          { 'alias' => '/exposed', 'path' => '/var/www/exposed' },
                                                          { 'alias' => '/phpharvester', 'path' => '/var/www/phpharvester' },
-                                                         { 'alias' => '/var/www/download', 'path' => '/var/www/download' },
+                                                         { 'alias' => '/download', 'path' => '/var/www/download' },
                                                          { 'alias' => '/piping', 'path' => '/var/www/piping/php' }],
                                    'docroot'         => '/var/www',
                                    'directories'     => [{ 'path' => '/var/www', 'options' => '-Indexes FollowSymLinks -MultiViews', 'allow_override' => 'All' },
@@ -71,6 +102,18 @@ class role_col::workbench(
     require     => Package['webmin']
   }
 
+  file { '/usr/share/php/Smarty':
+    ensure      => 'link',
+    target      => '/usr/share/php/smarty3',
+    require     => Package['smarty3']
+  }
+
+  file { '/usr/share/php/Smarty3':
+    ensure      => 'link',
+    target      => '/usr/share/php/smarty3',
+    require     => Package['smarty3']
+  }
+
   package { $packages:
     ensure      => "installed"
   }
@@ -82,6 +125,7 @@ class role_col::workbench(
   }
   include apache::mod::php
   include apache::mod::rewrite
+  include apache::mod::headers
 
   class { 'role_col::instances': 
     instances => $instances,
@@ -105,6 +149,24 @@ class role_col::workbench(
   # create extra users
   if $extra_users_hash {
     create_resources('base::users', parseyaml($extra_users_hash))
+  }
+
+  # create workbench users
+  group { 'gsd':
+    ensure      => present,
+  }
+  file { '/home/GSDS':
+    ensure      => 'directory',
+  }
+
+  if ($workbench_db_setperm == true){
+    if $workbench_db_perm {
+      create_resources('role_col::workbenchdbperm', $workbench_db_perm)
+    }
+  }
+
+  if $workbench_users_hash {
+    create_resources('role_col::workbenchusers', $workbench_users_hash)
   }
 
   class { 'role_col::workbenchdb':
