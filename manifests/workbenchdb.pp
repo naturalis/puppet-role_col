@@ -96,10 +96,24 @@ class role_col::workbenchdb(
 {
 
   class { 'mysql::bindings':
-    php_enable      => true
+    php_enable          => true
   }
 
   class { 'mysql::server':
     root_password       => $role_col::workbench::mysqlRootPassword,
+    override_options    => {
+                             'mysqld' => {
+                               'ft_min_word_len'            =>  '2',
+                               'innodb_buffer_pool_size'    =>  '512M',
+                               'max_heap_table_size'        =>  '512M',
+                               'myisam_sort_buffer_size'    =>  '8M',
+                               'net_buffer_length'          =>  '8K',
+                               'read_buffer_size'           =>  '256K',
+                               'read_rnd_buffer_size'       =>  '512K',
+                               'sort_buffer_size'           =>  '512K',
+                               'table_cache'                =>  '64',
+                               'tmp_table_size'             =>  '512M'
+                             }
+                           }
   }
 }
