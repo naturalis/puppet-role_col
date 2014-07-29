@@ -3,7 +3,7 @@
 #
 
 class role_col::websites(
-  $services			= ['mysqld','httpd']
+  $services         = ['mysqld','httpd','sshd']
 )
 {
   service { $services:

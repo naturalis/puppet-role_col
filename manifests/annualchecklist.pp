@@ -3,7 +3,7 @@
 #
 
 class role_col::annualchecklist(
-  $services			= ['mysqld','httpd']
+  $services         = ['mysqld','httpd','sshd']
 )
 {
   service { $services:
