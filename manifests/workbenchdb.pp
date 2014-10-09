@@ -112,7 +112,8 @@ class role_col::workbenchdb(
                                'read_rnd_buffer_size'       =>  '512K',
                                'sort_buffer_size'           =>  '512K',
                                'table_cache'                =>  '64',
-                               'tmp_table_size'             =>  '512M'
+                               'tmp_table_size'             =>  '512M',
+                               'bind-address'               =>  '0.0.0.0'
                              }
                            }
   }
