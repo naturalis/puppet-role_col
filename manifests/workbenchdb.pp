@@ -103,18 +103,25 @@ class role_col::workbenchdb(
     root_password       => $role_col::workbench::mysqlRootPassword,
     override_options    => {
                              'mysqld' => {
-                               'ft_min_word_len'            =>  '2',
-                               'innodb_buffer_pool_size'    =>  '512M',
-                               'max_heap_table_size'        =>  '512M',
-                               'myisam_sort_buffer_size'    =>  '8M',
-                               'net_buffer_length'          =>  '8K',
-                               'read_buffer_size'           =>  '256K',
-                               'read_rnd_buffer_size'       =>  '512K',
-                               'sort_buffer_size'           =>  '512K',
-                               'table_cache'                =>  '64',
-                               'tmp_table_size'             =>  '512M',
-                               'bind-address'               =>  '0.0.0.0'
+                               'ft_min_word_len'                =>  '2',
+                               'max_heap_table_size'            =>  '512M',
+                               'myisam_sort_buffer_size'        =>  '8M',
+                               'net_buffer_length'              =>  '8K',
+                               'read_buffer_size'               =>  '256K',
+                               'read_rnd_buffer_size'           =>  '512K',
+                               'sort_buffer_size'               =>  '512K',
+                               'table_cache'                    =>  '500',
+                               'tmp_table_size'                 =>  '1024M',
+                               'key_buffer_size'                =>  '2048M',
+                               'innodb_buffer_pool_size'        =>  '2048M',
+                               'innodb_additional_mem_pool_size'=>  '20M',
+                               'innodb_log_file_size'           =>  '64M',
+                               'innodb_log_buffer_size'         =>  '8MB',
+                               'innodb_flush_log_at_trx_commit' =>  '2',
+                               'query_cache_size'               =>  '128M',
+                               'bind-address'                   =>  '0.0.0.0'
                              }
                            }
   }
 }
+
