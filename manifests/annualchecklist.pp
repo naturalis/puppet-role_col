@@ -54,6 +54,21 @@ class role_col::annualchecklist(
   $mysql_connect_timeout                  = 3,
   $mysql_wait_timeout                     = 30,
 
+# Appsettings
+  $apphash                                = {'app_001' => { 'appfolder' => 'annual-checklist/2005'},
+                                             'app_002' => { 'appfolder' => 'annual-checklist/2006'},
+                                             'app_003' => { 'appfolder' => 'annual-checklist/2007'},
+                                             'app_004' => { 'appfolder' => 'annual-checklist/2008'},
+                                             'app_005' => { 'appfolder' => 'annual-checklist/2009'},
+                                             'app_006' => { 'appfolder' => 'annual-checklist/2010'},
+                                             'app_007' => { 'appfolder' => 'annual-checklist/2011'},
+                                             'app_008' => { 'appfolder' => 'annual-checklist/dnp2011'},
+                                             'app_010' => { 'appfolder' => 'annual-checklist/2013'},
+                                             'app_011' => { 'appfolder' => 'annual-checklist/2014'},
+                                             'app_012' => { 'appfolder' => 'annual-checklist/2012'},
+                                             'app_013' => { 'appfolder' => 'annual-checklist/2015'},
+                                             'app_014' => { 'appfolder' => 'annual-checklist/dnp2012'}
+                                            },
 # Apache Settings
   $instances                              = 
             {'www.catalogueoflife.org' => {
@@ -74,7 +89,6 @@ class role_col::annualchecklist(
                                   { alias => '/annual-checklist/2008/webservice', path => '/var/www/htdocs/webservice/annual-checklist/2008/' },
                                   { alias => '/webservice/annual-checklist/2009', path => '/var/www/htdocs/webservice/annual-checklist/2009/' },
                                   { alias => '/annual-checklist/2009/webservice', path => '/var/www/htdocs/webservice/annual-checklist/2009/' },
-                                  { alias => '/annual-checklist/2012', path => '/var/www/htdocs/annual-checklist/2012new/public/' },
                                   { alias => '/annual-checklist/2005', path => '/var/www/htdocs/annual-checklist/2005/' },
                                   { alias => '/annual-checklist/2006', path => '/var/www/htdocs/annual-checklist/2006/' },
                                   { alias => '/annual-checklist/2007', path => '/var/www/htdocs/annual-checklist/2007/' },
@@ -82,10 +96,11 @@ class role_col::annualchecklist(
                                   { alias => '/annual-checklist/2009', path => '/var/www/htdocs/annual-checklist/2009/' },
                                   { alias => '/annual-checklist/2010', path => '/var/www/htdocs/annual-checklist/2010/public/' },
                                   { alias => '/annual-checklist/2011', path => '/var/www/htdocs/annual-checklist/2011/public/' },
+                                  { alias => '/annual-checklist/2012', path => '/var/www/htdocs/annual-checklist/2012/public/' },
                                   { alias => '/annual-checklist/dnp2011', path => '/var/www/htdocs/annual-checklist/dnp2011/public/' },
                                   { alias => '/webservice/annual-checklist/dnp2011', path => '/var/www/htdocs/webservice/annual-checklist/dnp2011/' },
-                                  { alias => '/annual-checklist/dnp2012', path => '/var/www/htdocs/annual-checklist/2012/public/' },
-                                  { alias => '/webservice/annual-checklist/dnp2012', path => '/var/www/htdocs/webservice/annual-checklist/2012/' },
+                                  { alias => '/annual-checklist/dnp2012', path => '/var/www/htdocs/annual-checklist/dnp2012/public/' },
+                                  { alias => '/webservice/annual-checklist/dnp2012', path => '/var/www/htdocs/webservice/annual-checklist/dnp2012/' },
                                   { alias => '/annual-checklist/2013', path => '/var/www/htdocs/annual-checklist/2013/public/' },
                                   { alias => '/webservice/annual-checklist/2013', path => '/var/www/htdocs/webservice/annual-checklist/2013/' },
                                   { alias => '/annual-checklist/2014', path => '/var/www/htdocs/annual-checklist/2014/public/' },
@@ -127,7 +142,7 @@ class role_col::annualchecklist(
                                   { alias => '/annual-checklist/2008/webservice', path => '/var/www/htdocs/webservice/annual-checklist/2008/' },
                                   { alias => '/webservice/annual-checklist/2009', path => '/var/www/htdocs/webservice/annual-checklist/2009/' },
                                   { alias => '/annual-checklist/2009/webservice', path => '/var/www/htdocs/webservice/annual-checklist/2009/' },
-                                  { alias => '/annual-checklist/2012', path => '/var/www/htdocs/annual-checklist/2012new/public/' },
+                                  { alias => '/annual-checklist/2012', path => '/var/www/htdocs/annual-checklist/2012/public/' },
                                   { alias => '/annual-checklist/2005', path => '/var/www/htdocs/annual-checklist/2005/' },
                                   { alias => '/annual-checklist/2006', path => '/var/www/htdocs/annual-checklist/2006/' },
                                   { alias => '/annual-checklist/2007', path => '/var/www/htdocs/annual-checklist/2007/' },
@@ -137,8 +152,8 @@ class role_col::annualchecklist(
                                   { alias => '/annual-checklist/2011', path => '/var/www/htdocs/annual-checklist/2011/public/' },
                                   { alias => '/annual-checklist/dnp2011', path => '/var/www/htdocs/annual-checklist/dnp2011/public/' },
                                   { alias => '/webservice/annual-checklist/dnp2011', path => '/var/www/htdocs/webservice/annual-checklist/dnp2011/' },
-                                  { alias => '/annual-checklist/dnp2012', path => '/var/www/htdocs/annual-checklist/2012/public/' },
-                                  { alias => '/webservice/annual-checklist/dnp2012', path => '/var/www/htdocs/webservice/annual-checklist/2012/' },
+                                  { alias => '/annual-checklist/dnp2012', path => '/var/www/htdocs/annual-checklist/dnp2012/public/' },
+                                  { alias => '/webservice/annual-checklist/dnp2012', path => '/var/www/htdocs/webservice/annual-checklist/dnp2012/' },
                                   { alias => '/annual-checklist/2013', path => '/var/www/htdocs/annual-checklist/2013/public/' },
                                   { alias => '/webservice/annual-checklist/2013', path => '/var/www/htdocs/webservice/annual-checklist/2013/' },
                                   { alias => '/annual-checklist/2014', path => '/var/www/htdocs/annual-checklist/2014/public/' },
@@ -163,6 +178,7 @@ class role_col::annualchecklist(
     post_max_size             => $post_max_size,
     max_execution_time        => $max_execution_time,
     max_input_time            => $max_input_time,
+    require                   => Class['apache']
   }
 
   file { '/var/lib/php':
@@ -239,8 +255,22 @@ class role_col::annualchecklist(
 # General repo settings
   class { 'role_col::repogeneral': }
 
+# Configure apps
+  file { '/var/www/htdocs/annual-checklist':
+    ensure      => 'directory',
+    mode        => '750',
+    owner       => 'root',
+    group       => 'www-data',
+  }
+  
+  create_resources('role_col::confapp',$apphash)
+
+
+
+
+
 # Check out repositories
-#  create_resources('role_col::repo', $gitrepos)
+#  create_resources('role_col::repo', $repos)
 
 # install extra packages
 #  package { $extra_packages:
