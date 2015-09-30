@@ -55,7 +55,8 @@ class role_col::dynamicchecklist(
   $mysql_wait_timeout                     = 30,
 
 # Appsettings
-  $apphash                                = {'app_001' => { 'appfolder' => 'col'}
+  $apphash                                = {'app_001' => { 'appfolder' => 'col'},
+                                             'app_002' => { 'appfolder' => 'newcol'}
                                             },
 # Apache Settings
   $instances                              = 
@@ -73,9 +74,9 @@ class role_col::dynamicchecklist(
             'aliases'         => [{ alias => '/DCA_Export/webservice', path => '/var/www/htdocs/DCA_Webservice_v1.3/public/' },
                                   { alias => '/DCA_Export', path => '/var/www/htdocs/DCA_Export_v1.3/' },
                                   { alias => '/webservices', path => '/var/www/htdocs/webservices/public/' },
-                                  { alias => '/webservice/dynamic-checklist/2009', path => '/var/www/htdocs/webservice/dynamic-checklist/2009/' },
                                   { alias => '/dynamic-checklist', path => '/var/www/htdocs/col/public' },
                                   { alias => '/col', path => '/var/www/htdocs/col/public/' },
+                                  { alias => '/newcol', path => '/var/www/htdocs/newcol/public/' },
                                   { alias => '/listmatching', path => '/var/www/htdocs/listmatching/' }
                                  ],
                                         },
@@ -92,7 +93,7 @@ class role_col::dynamicchecklist(
             'aliases'         => [{ alias => '/DCA_Export/webservice', path => '/var/www/htdocs/DCA_Webservice_v1.3/public/' },
                                   { alias => '/DCA_Export', path => '/var/www/htdocs/DCA_Export_v1.3/' },
                                   { alias => '/webservices', path => '/var/www/htdocs/webservices/public/' },
-                                  { alias => '/webservice/dynamic-checklist/2009', path => '/var/www/htdocs/webservice/dynamic-checklist/2009/' },
+                                  { alias => '/webservice', path => '/var/www/htdocs/webservice/public/' },
                                   { alias => '/dynamic-checklist', path => '/var/www/htdocs/col/public' },
                                   { alias => '/col', path => '/var/www/htdocs/col/public/' },
                                   { alias => '/listmatching', path => '/var/www/htdocs/listmatching/' }
@@ -102,7 +103,15 @@ class role_col::dynamicchecklist(
   $keepalive                            = 'On',
   $max_keepalive_requests               = '100',
   $keepalive_timeout                    = '1500',
-  $timeout                              = '3600'
+  $timeout                              = '3600',
+
+# Update Settings
+  $workspace_dir                        = '/opt/colupdate',
+  $download_ip                          = '162.1.1.1',
+  $download_user                        = 'download',
+  $download_password                    = 'downloadpass',
+  $dcupdate_password                    = 'dcupdatapass'
+
 ){
 
 # install php modules
@@ -202,6 +211,8 @@ class role_col::dynamicchecklist(
   
   create_resources('role_col::confapp',$apphash)
 
+# Dynamic Checklist update code
+  class { 'role_col::dynamicupdate': }
 
 
 

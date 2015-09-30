@@ -1,0 +1,164 @@
+#!/bin/bash
+
+#######################################################
+# This script is for updating of CoL production servers
+# Originaly writen by Kwok Yin Cheung an edited by Viktoras Didziulis
+# Modified and puppetized by Hugo van Duijn
+#######################################################
+
+# Define all the constant variables
+# Change the variables' definitions here to configure this script
+# Note: Filename 'CoL_production.tar' is hard wired in this script
+WORKSPACE_DIR="<%= @workspace_dir %>"
+DOWNLOAD_URL="http://<%= @download_ip %>/download/CoL_production.tar"
+DOWNLOAD_USERNAME="<%= @download_user %>"
+DOWNLOAD_PASSWORD="<%= @download_password %>"
+DB_USERNAME="<%= @mysql_user %>"
+DB_PASSWORD="<%= @mysql_password %>"
+DCUPDATEPWD="<%= @dcupdate_password %>"  # DarwinCore Update password
+DEBUG=0
+TIMESTAMP=$(date +%s)
+
+# Give time at the beginning of this script
+echo "update_col_server.sh started: " `date`
+
+# Change directory to WORKSPACE_DIR
+cd $WORKSPACE_DIR
+
+# I don't know how to tell whether wget have actually download the file or not
+# so have to use other mean to test whether download have happen
+
+# get the timestamp of the old file
+if [ -e CoL_production.tar ]
+then
+echo "get the old timestamp"
+	OLD_TIMESTAMP=`stat -c %Y CoL_production.tar`
+else
+	# CoL_production.tar not here, just set the timestamp to 0
+	OLD_TIMESTAMP='0'
+fi
+
+# These lines are for debugging use
+if [ $DEBUG -ne '0' ]
+then
+	echo '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
+	echo "Old timestamp is " $OLD_TIMESTAMP
+	echo '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
+fi
+
+# use wget to get the tar file
+/usr/bin/wget -N $DOWNLOAD_URL \
+	--http-user=$DOWNLOAD_USERNAME \
+	--http-password=$DOWNLOAD_PASSWORD
+
+# After using wget to download the file, check the exit code is ok
+#
+# I thought I could use the exit code to check whether wget downloaded a
+# new file, but I was disappointed ..., all you could do is to check the
+# whether the url or command syntax is correct.
+#
+if [ $? -ne '0' ]
+then
+	echo "Can't get $DOWNLOAD_URL by wget."
+
+	# Give time at the end of this script
+	echo "update_col_server.sh ended: " `date`
+
+	exit 1;
+fi
+
+# get the timestamp of the new file
+NEW_TIMESTAMP=`stat -c %Y CoL_production.tar`
+
+# These lines are for debugging use
+if [ $DEBUG -ne '0' ]
+then
+	echo '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
+	echo "Old timestamp is " $OLD_TIMESTAMP
+	echo "New timestamp is " $NEW_TIMESTAMP
+	echo '$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$'
+fi
+
+if [ $OLD_TIMESTAMP -eq $NEW_TIMESTAMP ]
+then
+	echo "No new update, don't need to do anything."
+
+	# Give time at the end of this script
+	echo "update_col_server.sh ended: " `date`
+
+	exit 0;
+fi
+
+##########################################################
+# Here is where everything begin
+##########################################################
+echo "Update start here"
+
+
+# Extract CoL_production.tar
+echo "Extracting CoL_production.tar"
+tar -xvf CoL_production.tar
+
+# Change directory inside CoL_production
+cd CoL_production
+
+# update applications.xml and database directory
+echo "Updating application.xml and databases directory"
+
+
+rm -f /var/www/htdocs/newcol/application/configs/application.xml
+mv application/configs/application.xml /var/www/htdocs/newcol/application/configs/application.xml
+
+# Update images directory
+echo "Updating images directory"
+rm -rf /var/www/htdocs/newcol/public/images
+mv public/images /var/www/htdocs/newcol/public/images
+
+# Update info directory
+echo "Updating info directory"
+rm -rf /var/www/htdocs/newcol/application/views/scripts/info
+mv application/views/scripts/info /var/www/htdocs/newcol/application/views/scripts/info
+
+# Update application/data/languages directory
+echo "Updating languages directory"
+rm -rf /var/www/htdocs/newcol/application/data/languages
+mv languages /var/www/htdocs/newcol/application/data/languages
+
+# Update sitemaps
+echo "Updating sitemaps directory"
+rm -rf /var/www/htdocs/newcol/public/sitemaps
+mv sitemaps /var/www/htdocs/newcol/public/sitemaps
+
+# Update DCA emls
+#echo "Updating DarwinCore Archive emls"
+#rm /var/www/htdocs/DCA_Export_v1.3/templates/eml.tpl
+#rm /var/www/htdocs/DCA_Export_v1.3/templates/meta_eml.tpl
+#mv dca/eml.tpl /var/www/htdocs/DCA_Export_v1.3/templates/eml.tpl
+#mv dca/meta_eml.tpl /var/www/htdocs/DCA_Export_v1.3/templates/meta_eml.tpl
+
+
+# Update mysql database
+echo "Updating mysql database"
+mysql -u$DB_USERNAME -p$DB_PASSWORD -e \
+"CREATE DATABASE COL_Production_$TIMESTAMP CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE COL_Production_$TIMESTAMP;
+\. Assembly_Base_Schema.sql"
+
+# Change owner for all the files and directories
+chown -R apache:apache application public
+chown -R root:root /var/www/htdocs/newcol/public/sitemaps
+
+# Remove cache
+echo "Removing cache"
+rm -rf /var/www/htdocs/newcol/application/cache/
+
+sed -i "s/database.params.dbname   = COL_Production*/database.params.dbname   = COL_Production_$TIMESTAMP/g" /var/www/htdocs/newcol/config.ini
+
+# creating DarwinCore Archives after new release
+#echo "Creating DarwinCore Archives"
+#php /var/www/htdocs/DCA_Export_v1.3/monthly.php  -w $DCUPDATEPWD -d `date +%F`
+
+# Give time at the end of this script
+echo "update_col_server.sh ended: " `date`
+exit 0
+

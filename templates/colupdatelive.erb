@@ -1,0 +1,60 @@
+#!/bin/bash
+
+#######################################################
+# This script is for pushing new col version to production
+# Modified and puppetized by Hugo van Duijn
+#######################################################
+
+# Define all the constant variables
+# Change the variables' definitions here to configure this script
+# Note: Filename 'CoL_production.tar' is hard wired in this script
+WORKSPACE_DIR="<%= @workspace_dir %>"
+DB_USERNAME="<%= @mysql_user %>"
+DB_PASSWORD="<%= @mysql_password %>"
+DCUPDATEPWD="<%= @dcupdate_password %>"  # DarwinCore Update password
+DEBUG=0
+TIMESTAMP=$(date +%s)
+
+# Give time at the beginning of this script
+echo "update_col_server.sh started: " `date`
+
+# Change directory to WORKSPACE_DIR
+cd $WORKSPACE_DIR
+
+# Get databases
+echo "list mysql databases"
+
+mysql -u$DB_USERNAME -p$DB_PASSWORD -B --skip-column-names -e \
+"SELECT SCHEMA_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME like 'COL_Production%' ORDER BY SCHEMA_NAME;"
+
+
+AMOUNTOFDATABASES=$(mysql -u$DB_USERNAME -p$DB_PASSWORD -B --skip-column-names -e \
+"SELECT SCHEMA_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME like 'COL_Production%' ORDER BY SCHEMA_NAME;" | wc -l)
+
+FIRSTDATABASE=$(mysql -u$DB_USERNAME -p$DB_PASSWORD -B --skip-column-names -e \
+"SELECT SCHEMA_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME like 'COL_Production%' ORDER BY SCHEMA_NAME ASC LIMIT 1;")
+
+LATESTDATABASE=$(mysql -u$DB_USERNAME -p$DB_PASSWORD -B --skip-column-names -e \
+"SELECT SCHEMA_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME like 'COL_Production%' ORDER BY SCHEMA_NAME DESC LIMIT 1;")
+
+echo Amount of databases: $AMOUNTOFDATABASES;
+echo First database : $FIRSTDATABASE;
+echo Latest database : $LATESTDATABASE;
+
+
+rm -rf /var/www/htdocs/oldcol
+mv /var/www/htdocs/col /var/www/htdocs/oldcol
+cp -R /var/www/htdocs/newcol /var/www/htdocs/col
+
+
+# Remove cache
+#echo "Removing cache"
+
+# creating DarwinCore Archives after new release
+#echo "Creating DarwinCore Archives"
+#php /var/www/htdocs/DCA_Export_v1.3/monthly.php  -w $DCUPDATEPWD -d `date +%F`
+
+# Give time at the end of this script
+echo "update_col_server.sh ended: " `date`
+exit 0
+

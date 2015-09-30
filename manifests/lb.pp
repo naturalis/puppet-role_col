@@ -7,7 +7,7 @@
 class role_col::lb (
   $vhost       = { 'col_vhost'      => { 'proxy' => 'http://colwww',
                                          'server_name' => ['www.catalogueoflife.* catalogueoflife.*'] },
-                   'col_ws_vhost'   => { 'proxy' => 'http://coldc/webservices',
+                   'col_ws_vhost'   => { 'proxy' => 'http://coldc',
                                          'server_name' => ['webservice.catalogueoflife.*'] }
                 },
   $location    = {'loc_ac'          => {  'location' => '/annual-checklist',
