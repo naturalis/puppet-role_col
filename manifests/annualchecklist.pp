@@ -256,7 +256,8 @@ class role_col::annualchecklist(
   class { 'role_col::repogeneral': }
 
 # Configure apps
-  file { '/var/www/htdocs/annual-checklist':
+  file { 'approot':
+    path        => '/var/www/htdocs/annual-checklist',
     ensure      => 'directory',
     mode        => '750',
     owner       => 'root',

@@ -19,7 +19,7 @@ define role_col::confapp (
     owner       => 'root',
     group       => 'root',
     mode        => '0755',
-    require     => File["$docroot/annual-checklist"],
+    require     => File['approot'],
   }
 
 #  docroot/appfolder/application
