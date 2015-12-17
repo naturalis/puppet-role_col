@@ -27,7 +27,6 @@ echo "list mysql databases"
 mysql -u$DB_USERNAME -p$DB_PASSWORD -B --skip-column-names -e \
 "SELECT SCHEMA_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME like 'COL_Production%' ORDER BY SCHEMA_NAME;"
 
-
 AMOUNTOFDATABASES=$(mysql -u$DB_USERNAME -p$DB_PASSWORD -B --skip-column-names -e \
 "SELECT SCHEMA_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME like 'COL_Production%' ORDER BY SCHEMA_NAME;" | wc -l)
 
@@ -37,24 +36,42 @@ FIRSTDATABASE=$(mysql -u$DB_USERNAME -p$DB_PASSWORD -B --skip-column-names -e \
 LATESTDATABASE=$(mysql -u$DB_USERNAME -p$DB_PASSWORD -B --skip-column-names -e \
 "SELECT SCHEMA_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME like 'COL_Production%' ORDER BY SCHEMA_NAME DESC LIMIT 1;")
 
-echo Amount of databases: $AMOUNTOFDATABASES;
-echo First database : $FIRSTDATABASE;
-echo Latest database : $LATESTDATABASE;
+echo Amount of databases: $AMOUNTOFDATABASES
+echo First database : $FIRSTDATABASE
+echo Latest database : $LATESTDATABASE
 
+if [ "$AMOUNTOFDATABASES" -gt "3" ]
+then
+  echo Deleting $FIRSTDATABASE
+  echo $(mysql -u$DB_USERNAME -p$DB_PASSWORD -B -e \
+  "DROP DATABASE $FIRSTDATABASE;")
+fi
 
 rm -rf /var/www/htdocs/oldcol
-mv /var/www/htdocs/col /var/www/htdocs/oldcol
-cp -R /var/www/htdocs/newcol /var/www/htdocs/col
+cp -R /var/www/htdocs/col/* /var/www/htdocs/oldcol
+cp -R /var/www/htdocs/newcol/* /var/www/htdocs/col
 
+# fix permissions and set replace rewrite base in htaccess
+sed -i "s/newcol/col/g" /var/www/htdocs/col/public/.htaccess
 
-# Remove cache
-#echo "Removing cache"
+chown -R root:www-data /var/www/htdocs/col
+find /var/www/htdocs/col -type f -print -exec chmod 640 {} \;
+find /var/www/htdocs/col -type d -print -exec chmod 750 {} \;
+rm -rf /var/www/htdocs/col/application/log/*
+rm -rf /var/www/htdocs/col/application/cache/*
+chmod 777 /var/www/htdocs/col/application/log
+chmod 777 /var/www/htdocs/col/application/cache
+
+# updating listmatching config file with new database name
+sed -i "s/COL_Production.*/$LATESTDATABASE\");/g" /var/www/htdocs/listmatching/config.php
 
 # creating DarwinCore Archives after new release
-#echo "Creating DarwinCore Archives"
-#php /var/www/htdocs/DCA_Export_v1.3/monthly.php  -w $DCUPDATEPWD -d `date +%F`
+echo "Creating DarwinCore Archives"
+sed -i "s/dbname =.*/dbname = $LATESTDATABASE/g" /var/www/htdocs/DCA_Export_v1.3/config/settings.ini
+cd /var/www/htdocs/DCA_Export_v1.3
+php /var/www/htdocs/DCA_Export_v1.3/monthly.php  -w $DCUPDATEPWD -d `date +%F`
+chmod -R 777 /var/www/htdocs/DCA_Export_v1.3/zip
 
-# Give time at the end of this script
-echo "update_col_server.sh ended: " `date`
-exit 0
+
+
 

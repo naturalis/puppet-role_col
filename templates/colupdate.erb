@@ -145,18 +145,16 @@ USE COL_Production_$TIMESTAMP;
 \. Assembly_Base_Schema.sql"
 
 # Change owner for all the files and directories
-chown -R apache:apache application public
+chown -R www-data:www-data application public
 chown -R root:root /var/www/htdocs/newcol/public/sitemaps
 
 # Remove cache
 echo "Removing cache"
 rm -rf /var/www/htdocs/newcol/application/cache/
+sed -i "s/database.params.dbname   = COL_Production.*/database.params.dbname   = COL_Production_$TIMESTAMP/g" /var/www/htdocs/newcol/application/configs/config.ini
 
-sed -i "s/database.params.dbname   = COL_Production*/database.params.dbname   = COL_Production_$TIMESTAMP/g" /var/www/htdocs/newcol/config.ini
-
-# creating DarwinCore Archives after new release
-#echo "Creating DarwinCore Archives"
-#php /var/www/htdocs/DCA_Export_v1.3/monthly.php  -w $DCUPDATEPWD -d `date +%F`
+# Set live
+${WORKSPACE_DIR}/colupdatelive.sh
 
 # Give time at the end of this script
 echo "update_col_server.sh ended: " `date`

@@ -4,6 +4,7 @@
 
 class role_col::dynamicupdate(
   $workspace_dir                        = $role_col::dynamicchecklist::workspace_dir,
+  $update_hour                          = $role_col::dynamicchecklist::update_hour,
   $download_ip                          = $role_col::dynamicchecklist::download_ip,
   $download_user                        = $role_col::dynamicchecklist::download_user,
   $download_pass                        = $role_col::dynamicchecklist::download_pass,
@@ -40,5 +41,13 @@ class role_col::dynamicupdate(
     mode        => '0700',
     require     => File[$workspace_dir]
   }
+  
+# Set cronjob
+cron { colupdate:
+  command => "${workspace_dir}/colupdate.sh >> ${workspace_dir}/update.log",
+  user    => root,
+  hour    => $update_hour,
+  minute  => 0
+}
 
 }

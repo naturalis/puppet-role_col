@@ -110,8 +110,8 @@ class role_col::dynamicchecklist(
   $download_ip                          = '162.1.1.1',
   $download_user                        = 'download',
   $download_password                    = 'downloadpass',
-  $dcupdate_password                    = 'dcupdatapass'
-
+  $dcupdate_password                    = 'dcupdatapass',
+  $update_hour                          = '14'
 ){
 
 # install php modules
