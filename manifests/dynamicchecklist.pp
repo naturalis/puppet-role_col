@@ -47,6 +47,7 @@ class role_col::dynamicchecklist(
   $mysql_sql_mode                         = 'TRADITIONAL',
   $mysql_long_query_time                  = 5,
   $mysql_slow_query_log                   = 1,
+  $mysql_ft_min_word_len                  = 2,
   $mysql_slow_query_log_file              = '/var/log/mysql/mysql-slow.log',
   $mysql_log                              = '/var/log/mysql/mysql.log',
   $mysql_character_set_server             = 'utf8',
@@ -193,6 +194,7 @@ class role_col::dynamicchecklist(
           'thread_cache_size'               => $mysql_thread_cachesize,
           'connect_timeout'                 => $mysql_connect_timeout,
           'wait_timeout'                    => $mysql_wait_timeout,
+          'ft_min_word_len'                 => $mysql_ft_min_word_len,
       }
     }
   }

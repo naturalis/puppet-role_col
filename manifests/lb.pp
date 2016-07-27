@@ -69,7 +69,7 @@ class role_col::lb (
 
   class { 'nginx': }
 
-#  create_resources(nba::lb::wwwfiles,$files,{})
+#  create_resources
   create_resources(nginx::resource::vhost,$vhost,{})
   create_resources(nginx::resource::location,$location,{})
   create_resources(nginx::resource::upstream,$upstream,{})
