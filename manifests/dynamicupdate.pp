@@ -13,12 +13,27 @@ class role_col::dynamicupdate(
   $dcupdate_password                    = $role_col::dynamicchecklist::dcupdate_password
 ){
 
-#  create workspace dir
+# create workspace dir
   file { $workspace_dir:
     ensure      => 'directory',
     owner       => 'root',
     group       => 'root',
     mode        => '0700'
+  }
+
+# create log dir
+  file { "/var/log/col":
+    ensure      => 'directory',
+    owner       => 'root',
+    group       => 'root',
+    mode        => '0700'
+  }
+
+# create logrotate
+  file { '/etc/logrotate.d/colupdate':
+    ensure  => present,
+    mode    => '0644',
+    content => template('role_col/logrotate_colupdate.erb'),
   }
 
 
@@ -44,7 +59,7 @@ class role_col::dynamicupdate(
   
 # Set cronjob
 cron { colupdate:
-  command => "${workspace_dir}/colupdate.sh >> ${workspace_dir}/update.log",
+  command => "${workspace_dir}/colupdate.sh >> /var/log/col/colupdate.log",
   user    => root,
   hour    => $update_hour,
   minute  => 0
