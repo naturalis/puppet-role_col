@@ -1,0 +1,41 @@
+<?php
+        /*
+         This script is used to create a small statistics file
+         that can be used to checksum the CoL database
+        */
+
+        // Path to CoL database credentials
+        $configPath =  '/var/www/htdocs/newcol/application/configs/config.ini';
+        // Path to save location of output file
+        $savePath =  '<%= @workspace_dir %>/';
+
+        if (!file_exists($configPath)) {
+                die('Cannot load config.ini at ' . $configPath . "!\n\n");
+        }
+        if (!is_writable($savePath)) {
+                die($savePath . " is not writable!\n\n");
+        }
+        $ini = parse_ini_file($configPath);
+        $mysqli = new mysqli(
+                $ini['database.params.host'],
+                $ini['database.params.username'],
+                $ini['database.params.password'],
+                $ini['database.params.dbname']
+        );
+        $r = $mysqli->query('show tables');
+        while ($row = $r->fetch_row()) {
+                $tables[] = $row[0];
+        }
+        if (!isset($tables)) {
+                die("Could not retrieve tables for " . $ini['database.params.dbname'] . ".\n\n");
+        }
+        $output = "";
+        foreach ($tables as $table) {
+                $r = $mysqli->query('select count(*) from '. $table);
+                $row = $r->fetch_row();
+                $output .= $table . "\t" . $row[0] . "\n";
+        }
+        if (isset($output)) {
+                file_put_contents($savePath . 'db.txt', $output);
+        }
+?>

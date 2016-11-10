@@ -47,6 +47,32 @@ class role_col::dynamicupdate(
     require     => File[$workspace_dir]
   }
 
+# Create db_stats.php file used for comparing imported DB to exported DB 
+  file { "${workspace_dir}/db_stats.php":
+    ensure      => present,
+    content     =>  template('role_col/db_stats.php.erb'),
+    owner       => 'root',
+    group       => 'root',
+    mode        => '0700',
+    require     => File[$workspace_dir]
+  }
+
+# Create checkupdate.sh file used for sensu monitoring
+  file { '/usr/local/sbin/checkupdate.sh':
+    ensure      => present,
+    content     =>  template('role_col/checkupdate.erb'),
+    owner       => 'sensu',
+    group       => 'root',
+    mode        => '0770',
+    require     => File[$workspace_dir]
+  }
+
+# export check so sensu monitoring can make use of it
+  @sensu::check { 'Check update' :
+    command => '/usr/local/sbin/checkupdate.sh',
+    tag     => 'central_sensu',
+}
+
 # Create colupdatelive.sh file
   file { "${workspace_dir}/colupdatelive.sh":
     ensure      => present,
@@ -56,7 +82,17 @@ class role_col::dynamicupdate(
     mode        => '0700',
     require     => File[$workspace_dir]
   }
-  
+
+# Create dcaupdate.sh file
+  file { "${workspace_dir}/dcaupdate.sh":
+    ensure      => present,
+    content     =>  template('role_col/dcaupdate.erb'),
+    owner       => 'root',
+    group       => 'root',
+    mode        => '0700',
+    require     => File[$workspace_dir]
+  }
+
 # Set cronjob
 cron { colupdate:
   command => "${workspace_dir}/colupdate.sh >> /var/log/col/colupdate.log",
@@ -64,5 +100,15 @@ cron { colupdate:
   hour    => $update_hour,
   minute  => 0
 }
+
+# Set cronjob for dca 12 hours after colupdate
+cron { dcaupdate:
+  command => "${workspace_dir}/dcaupdate.sh >> /var/log/col/colupdate.log",
+  user    => root,
+  hour    => $dcaupdate_hour,
+  minute  => 0
+}
+
+
 
 }

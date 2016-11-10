@@ -112,7 +112,8 @@ class role_col::dynamicchecklist(
   $download_user                        = 'download',
   $download_password                    = 'downloadpass',
   $dcupdate_password                    = 'dcupdatapass',
-  $update_hour                          = '14'
+  $update_hour                          = '14',
+  $dcaupdate_hour                       = '02'
 ){
 
 # install php modules

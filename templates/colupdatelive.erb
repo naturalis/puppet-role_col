@@ -47,6 +47,15 @@ then
   "DROP DATABASE $FIRSTDATABASE;")
 fi
 
+if [ "$AMOUNTOFDATABASES" -gt "4" ]
+then
+  FIRSTDATABASE=$(mysql -u$DB_USERNAME -p$DB_PASSWORD -B --skip-column-names -e \
+  "SELECT SCHEMA_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME like 'COL_Production%' ORDER BY SCHEMA_NAME ASC LIMIT 1;")
+  echo Deleting $FIRSTDATABASE
+  echo $(mysql -u$DB_USERNAME -p$DB_PASSWORD -B -e \
+  "DROP DATABASE $FIRSTDATABASE;")
+fi
+
 rm -rf /var/www/htdocs/oldcol
 cp -R /var/www/htdocs/col/* /var/www/htdocs/oldcol
 cp -R /var/www/htdocs/newcol/* /var/www/htdocs/col
@@ -63,17 +72,18 @@ chmod 777 /var/www/htdocs/col/application/log
 chmod 777 /var/www/htdocs/col/application/cache
 
 # updating listmatching config file with new database name
-sed -i "s/COL_Production.*/$LATESTDATABASE\");/g" /var/www/htdocs/listmatching/config.php
+sed -i "s/DBNAME.*/DBNAME\",\"$LATESTDATABASE\"\)\;/g" /var/www/htdocs/listmatching/config.php
+
 
 # updating webservices config file with new database name
 sed -i "s/<dbname>COL_Production.*/<dbname>$LATESTDATABASE<\/dbname>/g" /var/www/htdocs/webservices/application/configs/application.xml
 
-# creating DarwinCore Archives after new release
+# creating DarwinCore Archives after new release, disabled, running on workbench from okt 2016
 echo "Creating DarwinCore Archives"
 sed -i "s/dbname =.*/dbname = $LATESTDATABASE/g" /var/www/htdocs/DCA_Export_v1.3/config/settings.ini
-cd /var/www/htdocs/DCA_Export_v1.3
-php /var/www/htdocs/DCA_Export_v1.3/monthly.php  -w $DCUPDATEPWD -d `date +%F`
-chmod -R 777 /var/www/htdocs/DCA_Export_v1.3/zip
+# cd /var/www/htdocs/DCA_Export_v1.3
+# php /var/www/htdocs/DCA_Export_v1.3/monthly.php  -w $DCUPDATEPWD -d `date +%F`
+# chmod -R 777 /var/www/htdocs/DCA_Export_v1.3/zip
 
 
 

@@ -60,7 +60,7 @@ fi
 if [ $? -ne '0' ]
 then
 	echo "Can't get $DOWNLOAD_URL by wget."
-
+	echo "Can't get $DOWNLOAD_URL by wget." > /tmp/UPDATE_ERROR
 	# Give time at the end of this script
 	echo "update_col_server.sh ended: " `date`
 
@@ -94,6 +94,8 @@ fi
 ##########################################################
 echo "Update start here"
 
+# Reset error state
+rm /tmp/UPDATE_ERROR
 
 # Extract CoL_production.tar
 echo "Extracting CoL_production.tar"
@@ -153,10 +155,29 @@ echo "Removing cache"
 rm -rf /var/www/htdocs/newcol/application/cache/
 sed -i "s/database.params.dbname   = COL_Production.*/database.params.dbname   = COL_Production_$TIMESTAMP/g" /var/www/htdocs/newcol/application/configs/config.ini
 
-# Set live
-${WORKSPACE_DIR}/colupdatelive.sh
+# Check if import of database was successful
+php ${WORKSPACE_DIR}/db_stats.php
+md5onworkbench=`md5sum ${WORKSPACE_DIR}/CoL_production/db.txt | awk '{ print $1 }'`
+md5fromdbstats=`md5sum ${WORKSPACE_DIR}/db.txt | awk '{ print $1 }'`
 
-# Give time at the end of this script
-echo "update_col_server.sh ended: " `date`
-exit 0
+# Clean up to make sure check doesn't use "old" data next time. 
+mv ${WORKSPACE_DIR}/CoL_production/db.txt ${WORKSPACE_DIR}/CoL_production/db.txt.alreadyused
+mv ${WORKSPACE_DIR}/db.txt ${WORKSPACE_DIR}/db.txt.alreadyused
+
+if [ "$md5onworkbench" = "$md5fromdbstats" ]
+then
+    echo "md5sum of db.txt matches, update will be set Live"
+    ${WORKSPACE_DIR}/colupdatelive.sh
+    # Give time at the end of this script
+    echo "update_col_server.sh ended: " `date`
+    exit 0;
+else
+    echo "md5sum of db.txt does not match, update will no be set Live"
+    echo "md5sum of db.txt does not match, update will no be set Live" > /tmp/UPDATE_ERROR
+    echo "update_col_server.sh ended: " `date`
+    exit 1;
+fi
+
+
+
 

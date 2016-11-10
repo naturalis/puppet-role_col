@@ -1,0 +1,86 @@
+#!/bin/bash
+
+# Define variables
+DCA_DIR=/var/www/htdocs/DCA_Export_v1.3/
+DOWNLOAD_FOLDER="http://<%= @download_ip %>/download/zip-fixed"
+DOWNLOAD_USERNAME="<%= @download_user %>"
+DOWNLOAD_PASSWORD="<%= @download_password %>"
+TIMESTAMP=$(date +%s)
+WORKSPACE_DIR="<%= @workspace_dir %>"
+
+# Give time at the beginning of this script
+echo "dcaupdate.sh started: " `date`
+
+# Change directory to workspace dir
+cd $WORKSPACE_DIR
+
+# I don't know how to tell whether wget have actually download the file or not
+# so have to use other mean to test whether download have happen
+
+# get the timestamp of the old file
+if [ -e dca.txt ]
+then
+echo "get the old timestamp"
+    OLD_TIMESTAMP=`stat -c %Y dca.txt`
+else
+    # CoL_production.tar not here, just set the timestamp to 0
+    OLD_TIMESTAMP='0'
+fi
+
+# use wget to get the tar file
+/usr/bin/wget -N $DOWNLOAD_FOLDER/dca.txt \
+    --http-user=$DOWNLOAD_USERNAME \
+    --http-password=$DOWNLOAD_PASSWORD
+
+# After using wget to download the file, check the exit code is ok
+#
+# I thought I could use the exit code to check whether wget downloaded a
+# new file, but I was disappointed ..., all you could do is to check the
+# whether the url or command syntax is correct.
+#
+if [ $? -ne '0' ]
+then
+    echo "Can't get $DOWNLOAD_FOLDER/dca.txt by wget."
+
+    # Give time at the end of this script
+    echo "dcaupdate.sh ended: " `date`
+
+    exit 1;
+fi
+
+# get the timestamp of the new file
+NEW_TIMESTAMP=`stat -c %Y dca.txt`
+
+if [ $OLD_TIMESTAMP -eq $NEW_TIMESTAMP ]
+then
+    echo "No new update, don't need to do anything."
+
+    # Give time at the end of this script
+    echo "dcaupdate.sh ended: " `date`
+
+    exit 0;
+fi
+
+##########################################################
+# Here is where everything begin
+##########################################################
+echo "Update start here"
+
+# Extract filename from dca.txt
+DCAFILE=`cat dca.txt`-archive-complete.zip
+
+# Change directory inside 
+cd $DCA_DIR/zip-fixed
+
+# Remove old archives
+rm -f *-archive-complete.zip
+
+# Download latest file
+/usr/bin/wget -N $DOWNLOAD_FOLDER/$DCA_FILE \
+    --http-user=$DOWNLOAD_USERNAME \
+    --http-password=$DOWNLOAD_PASSWORD
+
+# Give time at the end of this script
+echo "dcaupdate.sh ended: " `date`
+exit 0
+

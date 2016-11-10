@@ -1,0 +1,16 @@
+#!/bin/bash
+
+#######################################################
+# This script is for checking latest update status
+#######################################################
+
+errorfile=/tmp/UPDATE_ERROR
+
+if [ -f $errorfile ];
+then
+   cat $errorfile
+   exit 2
+else
+   echo "No error found while running latest update"
+   exit 0
+fi
