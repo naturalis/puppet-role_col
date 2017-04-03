@@ -67,18 +67,21 @@ fi
 echo "Update start here"
 
 # Extract filename from dca.txt
-DCAFILE=`cat dca.txt`-archive-complete.zip
+DCA_FILE=`cat dca.txt`-archive-complete.zip
 
 # Change directory inside 
 cd $DCA_DIR/zip-fixed
 
-# Remove old archives
-rm -f *-archive-complete.zip
+# Remove old archive
+rm -f archive-complete.zip
 
 # Download latest file
 /usr/bin/wget -N $DOWNLOAD_FOLDER/$DCA_FILE \
     --http-user=$DOWNLOAD_USERNAME \
     --http-password=$DOWNLOAD_PASSWORD
+
+# Copy latest archive to archive-complete
+cp $DCA_FILE archive-complete.zip
 
 # Give time at the end of this script
 echo "dcaupdate.sh ended: " `date`

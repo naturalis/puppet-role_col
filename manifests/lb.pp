@@ -58,7 +58,7 @@ class role_col::lb (
                                 'members' => ['162.13.2.44'],
                                },
                    'colwww' => {
-                                'members' => ['134.213.57.40'],
+                                'members' => ['145.136.242.11'],
                                },
                    'colwb' => {
                                 'members' => ['162.13.189.143'],
