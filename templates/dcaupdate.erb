@@ -75,19 +75,13 @@ cd $DCA_DIR/zip-fixed
 # Remove old archive
 rm -f archive-complete.zip
 
-# Change directory inside 
-cd $DCA_DIR/zip
-
-# Remove old archive
-rm -f *
-
 # Download latest file
 /usr/bin/wget -N $DOWNLOAD_FOLDER/$DCA_FILE \
     --http-user=$DOWNLOAD_USERNAME \
     --http-password=$DOWNLOAD_PASSWORD
 
 # Copy latest archive to archive-complete
-cp $DCA_FILE archive-complete.zip
+cp $DCA_FILE ../zip/archive-complete.zip
 
 # Give time at the end of this script
 echo "dcaupdate.sh ended: " `date`
