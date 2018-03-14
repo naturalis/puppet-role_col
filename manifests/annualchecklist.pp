@@ -48,7 +48,7 @@ class role_col::annualchecklist(
   $mysql_long_query_time                  = 5,
   $mysql_slow_query_log                   = 1,
   $mysql_slow_query_log_file              = '/var/log/mysql/mysql-slow.log',
-  $mysql_log                              = '/var/log/mysql/mysql.log',
+  $mysql_general_log                      = 'off',
   $mysql_character_set_server             = 'utf8',
   $mysql_collation_server                 = 'utf8_general_ci',
   $mysql_connect_timeout                  = 3,
@@ -250,7 +250,6 @@ class role_col::annualchecklist(
           'long_query_time'                 => $mysql_long_query_time,
           'slow_query_log'                  => $mysql_slow_query_log,
           'slow_query_log_file'             => $mysql_slow_query_log_file,
-          'log'                             => $mysql_log,
           'character_set_server'            => $mysql_character_set_server,
           'collation_server'                => $mysql_collation_server,
           'connect_timeout'                 => $mysql_connect_timeout,
@@ -258,6 +257,7 @@ class role_col::annualchecklist(
           'thread_cache_size'               => $mysql_thread_cachesize,
           'connect_timeout'                 => $mysql_connect_timeout,
           'wait_timeout'                    => $mysql_wait_timeout,
+          'general_log'                     => $mysql_general_log,
       }
     }
   }
