@@ -80,6 +80,9 @@ rm -f archive-complete.zip
     --http-user=$DOWNLOAD_USERNAME \
     --http-password=$DOWNLOAD_PASSWORD
 
+# Clean old files in zip folder
+rm -rf ../zip/*
+
 # Copy latest archive to archive-complete
 cp $DCA_FILE ../zip/archive-complete.zip
 

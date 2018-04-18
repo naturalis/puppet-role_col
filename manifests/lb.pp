@@ -67,7 +67,18 @@ class role_col::lb (
 #  $files       = {}
 ){
 
-  class { 'nginx': }
+# copy ratelimit config part file from puppet module
+  file{ '/etc/nginx/conf.d/ratelimit.conf' :
+    ensure    => present,
+    mode      => '0700',
+    source    => 'puppet:///modules/role_col/ratelimit.conf',
+  }
+
+  class { 'nginx':
+    keepalive_timeout       => '600s',
+    proxy_send_timeout      => '600s',
+    proxy_read_timeout      => '600s',
+  }
 
 #  create_resources
   create_resources(nginx::resource::vhost,$vhost,{})
