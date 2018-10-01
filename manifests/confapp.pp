@@ -63,7 +63,7 @@ define role_col::confapp (
 # Create .htaccess file
   file { "${docroot}/${appfolder}/public/.htaccess": 
     ensure      => present,
-    content     =>  template('role_col/app.htaccess.erb'),
+    content     => template('role_col/app.htaccess.erb'),
     owner       => $root,
     group       => 'www-data',
     mode        => '0640',

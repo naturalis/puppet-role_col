@@ -12,6 +12,7 @@ Classes
 -------------
 -
 role_col
+role_col::lb
 role_col::annualchecklist
 role_col::dynamicchecklist
 

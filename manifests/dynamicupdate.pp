@@ -3,14 +3,14 @@
 #
 
 class role_col::dynamicupdate(
-  $workspace_dir                        = $role_col::dynamicchecklist::workspace_dir,
-  $update_hour                          = $role_col::dynamicchecklist::update_hour,
-  $download_ip                          = $role_col::dynamicchecklist::download_ip,
-  $download_user                        = $role_col::dynamicchecklist::download_user,
-  $download_pass                        = $role_col::dynamicchecklist::download_pass,
+  $workspace_dir                        = $role_col::conf::workspace_dir,
+  $update_hour                          = $role_col::conf::update_hour,
+  $download_ip                          = $role_col::conf::download_ip,
+  $download_user                        = $role_col::conf::download_user,
+  $download_pass                        = $role_col::conf::download_pass,
   $mysql_user                           = 'root',
-  $mysql_password                       = $role_col::dynamicchecklist::mysql_root_password,
-  $dcupdate_password                    = $role_col::dynamicchecklist::dcupdate_password
+  $mysql_password                       = $role_col::conf::mysql_root_password,
+  $dcupdate_password                    = $role_col::conf::dcupdate_password
 ){
 
 # create workspace dir
@@ -57,19 +57,33 @@ class role_col::dynamicupdate(
     require     => File[$workspace_dir]
   }
 
+
+# Add entries to sudoers sensu user to run check using sudo permissions.
+  augeas { "sudochkupdate":
+    context => "/files/etc/sudoers",
+    changes => [
+      "set Cmnd_Alias[alias/name = 'SERVICES']/alias/name SERVICES",
+      "set Cmnd_Alias[alias/name = 'SERVICES']/alias/command[1] '/usr/local/sbin/checkupdate.sh'",
+      "set spec[user = 'sensu']/user sensu",
+      "set spec[user = 'sensu']/host_group/host ALL",
+      "set spec[user = 'sensu']/host_group/command SERVICES",
+      "set spec[user = 'sensu']/host_group/command/runas_user root",
+      "set spec[user = 'sensu']/host_group/command/tag NOPASSWD",
+      ],
+  }
+
+
 # Create checkupdate.sh file used for sensu monitoring
   file { '/usr/local/sbin/checkupdate.sh':
     ensure      => present,
     content     =>  template('role_col/checkupdate.erb'),
-    owner       => 'sensu',
-    group       => 'root',
-    mode        => '0770',
+    mode        => '0700',
     require     => File[$workspace_dir]
   }
 
 # export check so sensu monitoring can make use of it
   @sensu::check { 'Check update' :
-    command => '/usr/local/sbin/checkupdate.sh',
+    command => 'sudo /usr/local/sbin/checkupdate.sh',
     tag     => 'central_sensu',
 }
 
