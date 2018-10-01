@@ -69,7 +69,8 @@ class role_col::annualchecklist(
                                              'app_013' => { 'appfolder' => 'annual-checklist/2015'},
                                              'app_014' => { 'appfolder' => 'annual-checklist/2016'},
                                              'app_015' => { 'appfolder' => 'annual-checklist/dnp2012'},
-                                             'app_016' => { 'appfolder' => 'annual-checklist/2017'}
+                                             'app_016' => { 'appfolder' => 'annual-checklist/2017'},
+                                             'app_017' => { 'appfolder' => 'annual-checklist/2018'}
                                             },
 # Apache Settings
   $instances                              = 
@@ -83,7 +84,7 @@ class role_col::annualchecklist(
             'serveradmin'     => 'webmaster@naturalis.nl',
             'priority'        => 10,
             'redirectmatch_regexp' => ['/annual-checklist$','/annual-checklist/$'],
-            'redirectmatch_dest'   => ['/annual-checklist/2017','/annual-checklist/2017'],
+            'redirectmatch_dest'   => ['/annual-checklist/2018','/annual-checklist/2018'],
             'redirectmatch_status' => ['permanent','permanent'],
             'aliases'         => [{ alias => '/webservice/annual-checklist/2007', path => '/var/www/htdocs/webservice/annual-checklist/2007/' },
                                   { alias => '/annual-checklist/2007/webservice', path => '/var/www/htdocs/webservice/annual-checklist/2007/' },
@@ -113,6 +114,8 @@ class role_col::annualchecklist(
                                   { alias => '/webservice/annual-checklist/2016', path => '/var/www/htdocs/webservice/annual-checklist/2016/' },
                                   { alias => '/annual-checklist/2017', path => '/var/www/htdocs/annual-checklist/2017/public/' },
                                   { alias => '/webservice/annual-checklist/2017', path => '/var/www/htdocs/webservice/annual-checklist/2017/' },
+                                  { alias => '/annual-checklist/2018', path => '/var/www/htdocs/annual-checklist/2018/public/' },
+                                  { alias => '/webservice/annual-checklist/2018', path => '/var/www/htdocs/webservice/annual-checklist/2018/' },
                                  ],
                                         },
             'webservice.catalogueoflife.org' => {
@@ -130,8 +133,8 @@ class role_col::annualchecklist(
                                        '/annual-checklist/([0-9][0-9][0-9][0-9])/$',
                                        '/annual-checklist/([a-z][a-z][a-z][0-9][0-9][0-9][0-9])$',
                                        '/annual-checklist/([a-z][a-z][a-z][0-9][0-9][0-9][0-9])/$'],
-            'redirectmatch_dest'   => ['/annual-checklist/2017/webservice',
-                                       '/annual-checklist/2017/webservice',
+            'redirectmatch_dest'   => ['/annual-checklist/2018/webservice',
+                                       '/annual-checklist/2018/webservice',
                                        '/annual-checklist/$1/webservice',
                                        '/annual-checklist/$1/webservice',
                                        '/annual-checklist/$1/webservice',
@@ -170,6 +173,8 @@ class role_col::annualchecklist(
                                   { alias => '/webservice/annual-checklist/2016', path => '/var/www/htdocs/webservice/annual-checklist/2016/' },
                                   { alias => '/annual-checklist/2017', path => '/var/www/htdocs/annual-checklist/2017/public/' },
                                   { alias => '/webservice/annual-checklist/2017', path => '/var/www/htdocs/webservice/annual-checklist/2017/' },
+                                  { alias => '/annual-checklist/2018', path => '/var/www/htdocs/annual-checklist/2018/public/' },
+                                  { alias => '/webservice/annual-checklist/2018', path => '/var/www/htdocs/webservice/annual-checklist/2018/' },
                                  ],
                               },
                             },
