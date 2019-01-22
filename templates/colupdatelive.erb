@@ -79,11 +79,11 @@ sed -i "s/DBNAME.*/DBNAME\",\"$LATESTDATABASE\"\)\;/g" /var/www/htdocs/listmatch
 sed -i "s/<dbname>COL_Production.*/<dbname>$LATESTDATABASE<\/dbname>/g" /var/www/htdocs/webservices/application/configs/application.xml
 
 # creating DarwinCore Archives after new release, disabled, running on workbench from okt 2016
-echo "Creating DarwinCore Archives"
-sed -i "s/dbname =.*/dbname = $LATESTDATABASE/g" /var/www/htdocs/DCA_Export_v1.3/config/settings.ini
-# cd /var/www/htdocs/DCA_Export_v1.3
-# php /var/www/htdocs/DCA_Export_v1.3/monthly.php  -w $DCUPDATEPWD -d `date +%F`
-# chmod -R 777 /var/www/htdocs/DCA_Export_v1.3/zip
+echo "Modifying credentials in DCA_Export config.ini"
+sed -i "s/dbname =.*/dbname = $LATESTDATABASE/g" /var/www/htdocs/DCA_Export/config/settings.ini
+
+
+
 
 
 

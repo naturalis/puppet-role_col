@@ -5,7 +5,6 @@
 class role_col::db(
 ){
 
-
 # Configure MySQL Security and finetuning if needed
   class { 'mysql::server::account_security':}
   class { 'mysql::server':
@@ -37,7 +36,6 @@ class role_col::db(
           'connect_timeout'                 => $role_col::conf::mysql_connect_timeout,
           'thread_stack'                    => $role_col::conf::mysql_thread_stack,
           'thread_cache_size'               => $role_col::conf::mysql_thread_cachesize,
-          'connect_timeout'                 => $role_col::conf::mysql_connect_timeout,
           'wait_timeout'                    => $role_col::conf::mysql_wait_timeout,
           'general_log'                     => $role_col::conf::mysql_general_log,
       }

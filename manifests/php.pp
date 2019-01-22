@@ -2,17 +2,6 @@
 class role_col::php (
 ) {
 
-  $php_packages = [
-    'php7.1-curl',
-    'php7.1-apc',
-    'php7.1-mysql',
-  ]
-
-  package { $php_packages:
-    ensure  => present,
-    require => Class['::php']
-  }
-
   class { '::php::globals':
     php_version => '7.1',
     config_root => '/etc/php/7.1',
@@ -26,6 +15,25 @@ class role_col::php (
       'PHP/post_max_size'       => $role_col::post_max_size,
       'PHP/upload_max_filesize' => $role_col::upload_max_filesize,
     },
+    extensions => {
+       'gd' => {},
+       'curl' => {
+         ini_prefix => '20-',
+       },
+       'apcu'  => {
+         provider => 'pecl',
+         settings => {
+           'apc/stat'       => '1',
+           'apc/stat_ctime' => '1',
+         },
+       },
+       'json' => {},
+       'readline' => {},
+       'zip' => {},
+       'mysql' => {
+         'so_name' => 'mysqli'
+       },
+       'mbstring' => {},
+    }
   }
-
 }

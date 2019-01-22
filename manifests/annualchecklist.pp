@@ -156,8 +156,9 @@ class role_col::annualchecklist(
     keepalive_timeout         => $role_col::conf::keepalive_timeout,
     default_vhost             => false,
   }
-
-  include apache::mod::php
+  class {'apache::mod::php':
+     php_version => '7.1',
+  }
   include apache::mod::rewrite
   include apache::mod::speling
 

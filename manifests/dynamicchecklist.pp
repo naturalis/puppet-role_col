@@ -4,8 +4,9 @@
 
 class role_col::dynamicchecklist(
 # Appsettings
-  $apphash                                = {'app_001' => { 'appfolder' => 'col'},
-                                             'app_002' => { 'appfolder' => 'newcol'}
+  $apphash                                = {'newcol' => { 'appfolder' => '/data/git/AC_Interface',
+                                                           'link'      => '/var/www/htdocs/newcol' },
+                                             'col'    => { 'appfolder' => '/var/www/htdocs/col'}
                                             },
 # Apache Settings
   $instances                              = 
@@ -21,7 +22,7 @@ class role_col::dynamicchecklist(
             'redirectmatch_dest'   => ['/col','/col/'],
             'redirectmatch_status' => ['permanent','permanent'],
             'aliases'         => [{ alias => '/DCA_Export/webservice', path => '/var/www/htdocs/DCA_Webservice_v1.3/public/' },
-                                  { alias => '/DCA_Export', path => '/var/www/htdocs/DCA_Export_v1.3/' },
+#                                 { alias => '/DCA_Export', path => '/var/www/htdocs/DCA_Export_v1.3/' },
                                   { alias => '/webservices', path => '/var/www/htdocs/webservices/public/' },
                                   { alias => '/dynamic-checklist', path => '/var/www/htdocs/col/public' },
                                   { alias => '/col', path => '/var/www/htdocs/col/public/' },
@@ -40,7 +41,7 @@ class role_col::dynamicchecklist(
             'redirectmatch_dest'   => ['/col/webservice'],
             'redirectmatch_status' => ['permanent'],
             'aliases'         => [{ alias => '/DCA_Export/webservice', path => '/var/www/htdocs/DCA_Webservice_v1.3/public/' },
-                                  { alias => '/DCA_Export', path => '/var/www/htdocs/DCA_Export_v1.3/' },
+#                                  { alias => '/DCA_Export', path => '/var/www/htdocs/DCA_Export_v1.3/' },
                                   { alias => '/webservices', path => '/var/www/htdocs/webservices/public/' },
                                   { alias => '/webservice', path => '/var/www/htdocs/webservice/public/' },
                                   { alias => '/dynamic-checklist', path => '/var/www/htdocs/col/public' },
@@ -78,7 +79,9 @@ class role_col::dynamicchecklist(
     default_vhost             => false,
   }
 
-  include apache::mod::php
+  class {'apache::mod::php':
+     php_version => '7.1',
+  }
   include apache::mod::rewrite
   include apache::mod::speling
 

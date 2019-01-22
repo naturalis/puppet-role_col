@@ -7,7 +7,7 @@ class role_col::dynamicupdate(
   $update_hour                          = $role_col::conf::update_hour,
   $download_ip                          = $role_col::conf::download_ip,
   $download_user                        = $role_col::conf::download_user,
-  $download_pass                        = $role_col::conf::download_pass,
+  $download_pass                        = $role_col::conf::download_password,
   $mysql_user                           = 'root',
   $mysql_password                       = $role_col::conf::mysql_root_password,
   $dcupdate_password                    = $role_col::conf::dcupdate_password
@@ -57,21 +57,16 @@ class role_col::dynamicupdate(
     require     => File[$workspace_dir]
   }
 
+# Add sudoers lines
+  $sudoers_array = ["Cmnd_Alias CHKUPDATE = /usr/local/sbin/checkupdate.sh",
+                    "sensu ALL = (root) NOPASSWD : CHKUPDATE"]
 
-# Add entries to sudoers sensu user to run check using sudo permissions.
-  augeas { "sudochkupdate":
-    context => "/files/etc/sudoers",
-    changes => [
-      "set Cmnd_Alias[alias/name = 'SERVICES']/alias/name SERVICES",
-      "set Cmnd_Alias[alias/name = 'SERVICES']/alias/command[1] '/usr/local/sbin/checkupdate.sh'",
-      "set spec[user = 'sensu']/user sensu",
-      "set spec[user = 'sensu']/host_group/host ALL",
-      "set spec[user = 'sensu']/host_group/command SERVICES",
-      "set spec[user = 'sensu']/host_group/command/runas_user root",
-      "set spec[user = 'sensu']/host_group/command/tag NOPASSWD",
-      ],
+  $sudoers_array.each |String $sudoers_line| {
+    file_line {$sudoers_line:
+      path   => '/etc/sudoers',
+      line   => $sudoers_line
+    }
   }
-
 
 # Create checkupdate.sh file used for sensu monitoring
   file { '/usr/local/sbin/checkupdate.sh':
@@ -106,6 +101,7 @@ class role_col::dynamicupdate(
     mode        => '0700',
     require     => File[$workspace_dir]
   }
+
 
 # Set cronjob
 cron { colupdate:

@@ -3,7 +3,7 @@ php_value session.auto_start 0
 AddDefaultCharset UTF-8
 
 RewriteEngine On
-RewriteBase /<%= scope['appfolder'] %>
+RewriteBase /<%= scope['rewritebase'] %>
 RewriteCond %{REQUEST_FILENAME} -s [OR]
 RewriteCond %{REQUEST_FILENAME} -l [OR]
 RewriteCond %{REQUEST_FILENAME} -d

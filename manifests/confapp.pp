@@ -6,15 +6,15 @@
 #
 #
 define role_col::confapp (
-  $appfolder          ,
-  $docroot            = '/var/www/htdocs',
+  $appfolder,
+  $link = undef,
 )
 {
 
-
+$rewritebase = $title
 
 #  docroot/appfolder
-  file { "${docroot}/${appfolder}/":
+  file { "${appfolder}/":
     ensure      => 'directory',
     owner       => 'root',
     group       => 'root',
@@ -22,58 +22,66 @@ define role_col::confapp (
     require     => File['approot'],
   }
 
+#  link if defined
+  if $link {
+    file { $link:
+      ensure => 'link',
+      target => $appfolder,
+    }
+  }
+
 #  docroot/appfolder/application
-  file { "${docroot}/${appfolder}/application":
+  file { "${appfolder}/application":
     ensure      => 'directory',
     owner       => 'root',
     group       => 'root',
     mode        => '0755',
-    require     => File["$docroot/${appfolder}"],
+    require     => File["${appfolder}"],
   }
 
 #  docroot/appfolder/application/log
-  file { "${docroot}/${appfolder}/application/log":
+  file { "${appfolder}/application/log":
     ensure      => 'directory',
     owner       => 'root',
     group       => 'www-data',
     mode        => '0775',
     recurse     => true,
-    require     => File["$docroot/${appfolder}/application"],
+    require     => File["${appfolder}/application"],
   }
 
 #  docroot/appfolder/application/cache
-  file { "${docroot}/${appfolder}/application/cache":
+  file { "${appfolder}/application/cache":
     ensure      => 'directory',
     owner       => 'root',
     group       => 'www-data',
     mode        => '0775',
-    require     => File["$docroot/${appfolder}/application"],
+    require     => File["${appfolder}/application"],
   }
 
 #  docroot/appfolder/public
-  file { "${docroot}/${appfolder}/public":
+  file { "${appfolder}/public":
     ensure      => 'directory',
     owner       => 'root',
     group       => 'root',
     mode        => '0755',
-    require     => File["$docroot/${appfolder}"],
+    require     => File["${appfolder}"],
   }
 
 
 # Create .htaccess file
-  file { "${docroot}/${appfolder}/public/.htaccess": 
+  file { "${appfolder}/public/.htaccess": 
     ensure      => present,
     content     => template('role_col/app.htaccess.erb'),
     owner       => $root,
     group       => 'www-data',
     mode        => '0640',
-    require     => File["$docroot/${appfolder}/public"],
+    require     => File["${appfolder}/public"],
   }
 
 # remove toplevel .htaccess
-  file { "${docroot}/${appfolder}/.htaccess":
+  file { "${appfolder}/.htaccess":
     ensure      => 'absent',
-    require     => File["$docroot/${appfolder}"],
+    require     => File["${appfolder}"],
   }
 
 
