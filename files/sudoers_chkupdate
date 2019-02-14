@@ -1,0 +1,8 @@
+set Cmnd_Alias[alias/name = 'CHKUPDATE']/alias/name CHKUPDATE
+set Cmnd_Alias[alias/name = 'CHKUPDATE']/alias/command[1] '/usr/local/sbin/checkupdate.sh'
+set spec[user = 'sensu']/user sensu
+set spec[user = 'sensu']/host_group/host ALL
+set spec[user = 'sensu']/host_group/command CHKUPDATE
+set spec[user = 'sensu']/host_group/command/runas_user root
+set spec[user = 'sensu']/host_group/command/tag NOPASSWD
+
