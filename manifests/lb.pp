@@ -6,9 +6,17 @@
 #
 class role_col::lb (
   $server       = { 'col_server'      => { 'proxy' => 'http://colwww',
-                                         'server_name' => ['www.catalogueoflife.* catalogueoflife.*'] },
-                   'col_ws_server'   => { 'proxy' => 'http://coldc',
-                                         'server_name' => ['webservice.catalogueoflife.*'] }
+                                         'server_name' => ['www.catalogueoflife.* catalogueoflife.*'],
+#                                         'ssl'          => true,
+#                                         'ssl_cert'     => '/etc/letsencrypt/live/catalogueoflife.org/fullchain.pem',
+#                                         'ssl_key'      => '/etc/letsencrypt/live/catalogueoflife.org/privkey.pem',
+                                         },
+                    'col_ws_server'   => { 'proxy' => 'http://coldc',
+                                         'server_name' => ['webservice.catalogueoflife.*'],
+#                                         'ssl'          => true,
+#                                         'ssl_cert'     => '/etc/letsencrypt/live/catalogueoflife.org/fullchain.pem',
+#                                         'ssl_key'      => '/etc/letsencrypt/live/catalogueoflife.org/privkey.pem',
+                                         },
                 },
   $location    = {'loc_ac'          => {  'location' => '/annual-checklist',
                                           'server' => 'col_server',

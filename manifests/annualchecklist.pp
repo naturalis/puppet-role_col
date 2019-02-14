@@ -4,22 +4,22 @@
 
 class role_col::annualchecklist(
 # Appsettings
-  $apphash                                = {'app_001' => { 'appfolder' => 'annual-checklist/2005'},
-                                             'app_002' => { 'appfolder' => 'annual-checklist/2006'},
-                                             'app_003' => { 'appfolder' => 'annual-checklist/2007'},
-                                             'app_004' => { 'appfolder' => 'annual-checklist/2008'},
-                                             'app_005' => { 'appfolder' => 'annual-checklist/2009'},
-                                             'app_006' => { 'appfolder' => 'annual-checklist/2010'},
-                                             'app_007' => { 'appfolder' => 'annual-checklist/2011'},
-                                             'app_008' => { 'appfolder' => 'annual-checklist/dnp2011'},
-                                             'app_010' => { 'appfolder' => 'annual-checklist/2013'},
-                                             'app_011' => { 'appfolder' => 'annual-checklist/2014'},
-                                             'app_012' => { 'appfolder' => 'annual-checklist/2012'},
-                                             'app_013' => { 'appfolder' => 'annual-checklist/2015'},
-                                             'app_014' => { 'appfolder' => 'annual-checklist/2016'},
-                                             'app_015' => { 'appfolder' => 'annual-checklist/dnp2012'},
-                                             'app_016' => { 'appfolder' => 'annual-checklist/2017'},
-                                             'app_017' => { 'appfolder' => 'annual-checklist/2018'}
+  $apphash                                = {'annual-checklist/2005' => { 'appfolder' => '/var/www/htdocs/annual-checklist/2005'},
+                                             'annual-checklist/2006' => { 'appfolder' => '/var/www/htdocs/annual-checklist/2006'},
+                                             'annual-checklist/2007' => { 'appfolder' => '/var/www/htdocs/annual-checklist/2007'},
+                                             'annual-checklist/2008' => { 'appfolder' => '/var/www/htdocs/annual-checklist/2008'},
+                                             'annual-checklist/2009' => { 'appfolder' => '/var/www/htdocs/annual-checklist/2009'},
+                                             'annual-checklist/2010' => { 'appfolder' => '/var/www/htdocs/annual-checklist/2010'},
+                                             'annual-checklist/2011' => { 'appfolder' => '/var/www/htdocs/annual-checklist/2011'},
+                                             'annual-checklist/dnp2011' => { 'appfolder' => '/var/www/htdocs/annual-checklist/dnp2011'},
+                                             'annual-checklist/2013' => { 'appfolder' => '/var/www/htdocs/annual-checklist/2013'},
+                                             'annual-checklist/2014' => { 'appfolder' => '/var/www/htdocs/annual-checklist/2014'},
+                                             'annual-checklist/2012' => { 'appfolder' => '/var/www/htdocs/annual-checklist/2012'},
+                                             'annual-checklist/2015' => { 'appfolder' => '/var/www/htdocs/annual-checklist/2015'},
+                                             'annual-checklist/2016' => { 'appfolder' => '/var/www/htdocs/annual-checklist/2016'},
+                                             'annual-checklist/dnp2012' => { 'appfolder' => '/var/www/htdocs/annual-checklist/dnp2012'},
+                                             'annual-checklist/2017' => { 'appfolder' => '/var/www/htdocs/annual-checklist/2017'},
+                                             'annual-checklist/2018' => { 'appfolder' => '/var/www/htdocs/annual-checklist/2018'}
                                             },
 # Apache Settings
   $instances                              = 
