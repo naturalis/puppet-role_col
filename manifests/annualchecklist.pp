@@ -19,6 +19,7 @@ class role_col::annualchecklist(
                                              'annual-checklist/2016' => { 'appfolder' => '/var/www/htdocs/annual-checklist/2016'},
                                              'annual-checklist/dnp2012' => { 'appfolder' => '/var/www/htdocs/annual-checklist/dnp2012'},
                                              'annual-checklist/2017' => { 'appfolder' => '/var/www/htdocs/annual-checklist/2017'},
+                                             'annual-checklist/2019' => { 'appfolder' => '/var/www/htdocs/annual-checklist/2019'},
                                              'annual-checklist/2018' => { 'appfolder' => '/var/www/htdocs/annual-checklist/2018'}
                                             },
 # Apache Settings
@@ -33,7 +34,7 @@ class role_col::annualchecklist(
             'serveradmin'     => 'webmaster@naturalis.nl',
             'priority'        => 10,
             'redirectmatch_regexp' => ['/annual-checklist$','/annual-checklist/$'],
-            'redirectmatch_dest'   => ['/annual-checklist/2018','/annual-checklist/2018'],
+            'redirectmatch_dest'   => ['/annual-checklist/2019','/annual-checklist/2019'],
             'redirectmatch_status' => ['permanent','permanent'],
             'aliases'         => [{ alias => '/webservice/annual-checklist/2007', path => '/var/www/htdocs/webservice/annual-checklist/2007/' },
                                   { alias => '/annual-checklist/2007/webservice', path => '/var/www/htdocs/webservice/annual-checklist/2007/' },
@@ -65,6 +66,8 @@ class role_col::annualchecklist(
                                   { alias => '/webservice/annual-checklist/2017', path => '/var/www/htdocs/webservice/annual-checklist/2017/' },
                                   { alias => '/annual-checklist/2018', path => '/var/www/htdocs/annual-checklist/2018/public/' },
                                   { alias => '/webservice/annual-checklist/2018', path => '/var/www/htdocs/webservice/annual-checklist/2018/' },
+                                  { alias => '/annual-checklist/2019', path => '/var/www/htdocs/annual-checklist/2019/public/' },
+                                  { alias => '/webservice/annual-checklist/2019', path => '/var/www/htdocs/webservice/annual-checklist/2019/' }
                                  ],
                                         },
             'webservice.catalogueoflife.org' => {
@@ -124,6 +127,8 @@ class role_col::annualchecklist(
                                   { alias => '/webservice/annual-checklist/2017', path => '/var/www/htdocs/webservice/annual-checklist/2017/' },
                                   { alias => '/annual-checklist/2018', path => '/var/www/htdocs/annual-checklist/2018/public/' },
                                   { alias => '/webservice/annual-checklist/2018', path => '/var/www/htdocs/webservice/annual-checklist/2018/' },
+                                  { alias => '/annual-checklist/2019', path => '/var/www/htdocs/annual-checklist/2019/public/' },
+                                  { alias => '/webservice/annual-checklist/2019', path => '/var/www/htdocs/webservice/annual-checklist/2019/' }
                                  ],
                               },
                             },

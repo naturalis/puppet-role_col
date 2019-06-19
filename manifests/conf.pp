@@ -19,7 +19,7 @@ class role_col::conf(
 #    ],
 
 # PHP Settings
-  $php_memory_limit                       = '128M',
+  $php_memory_limit                       = '512M',
   $upload_max_filesize                    = '16M',
   $post_max_size                          = '16M',
   $max_execution_time                     = '30',
