@@ -83,9 +83,10 @@ class role_col::lb (
   }
 
   class { 'nginx':
-    keepalive_timeout       => '600s',
-    proxy_send_timeout      => '600s',
-    proxy_read_timeout      => '600s',
+    keepalive_timeout        => '600s',
+    proxy_send_timeout       => '600s',
+    proxy_read_timeout       => '600s',
+    proxy_max_temp_file_size => '100m',
   }
 
 #  create_resources
