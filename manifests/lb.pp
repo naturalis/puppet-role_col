@@ -7,12 +7,14 @@
 class role_col::lb (
   $server       = { 'col_server'      => { 'proxy' => 'http://colwww',
                                          'server_name' => ['www.catalogueoflife.* catalogueoflife.*'],
+                                         'server_cfg_append' => 'limit_req zone=one',
 #                                         'ssl'          => true,
 #                                         'ssl_cert'     => '/etc/letsencrypt/live/catalogueoflife.org/fullchain.pem',
 #                                         'ssl_key'      => '/etc/letsencrypt/live/catalogueoflife.org/privkey.pem',
                                          },
                     'col_ws_server'   => { 'proxy' => 'http://coldc',
                                          'server_name' => ['webservice.catalogueoflife.*'],
+                                         
 #                                         'ssl'          => true,
 #                                         'ssl_cert'     => '/etc/letsencrypt/live/catalogueoflife.org/fullchain.pem',
 #                                         'ssl_key'      => '/etc/letsencrypt/live/catalogueoflife.org/privkey.pem',
@@ -86,7 +88,6 @@ class role_col::lb (
     keepalive_timeout        => '600s',
     proxy_send_timeout       => '600s',
     proxy_read_timeout       => '600s',
-    proxy_max_temp_file_size => '100m',
   }
 
 #  create_resources
