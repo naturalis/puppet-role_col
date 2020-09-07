@@ -80,8 +80,15 @@ class role_col::lb (
 # copy ratelimit config part file from puppet module
   file{ '/etc/nginx/conf.d/ratelimit.conf' :
     ensure    => present,
-    mode      => '0700',
+    mode      => '0644',
     source    => 'puppet:///modules/role_col/ratelimit.conf',
+  }
+
+# copy filesizelimit config part file from puppet module
+  file{ '/etc/nginx/conf.d/filesizelimit.conf' :
+    ensure    => present,
+    mode      => '0644',
+    source    => 'puppet:///modules/role_col/filesizelimit.conf',
   }
 
   class { 'nginx':
